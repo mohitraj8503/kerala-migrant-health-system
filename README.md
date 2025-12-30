@@ -138,7 +138,7 @@ A **production-ready digital health platform** that:
 ### Installation
 
 Clone repository
-git clone https://github.com/YOUR_USERNAME/kerala-migrant-health-system.git
+git clone https://github.com/mohitraj8503/kerala-migrant-health-system.git
 cd kerala-migrant-health-system
 
 Install dependencies
