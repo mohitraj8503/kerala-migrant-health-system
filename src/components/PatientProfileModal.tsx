@@ -1,17 +1,14 @@
 import { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-    X, MapPin, Activity, Shield, Check, Share2,
-    Plus, Home, Smartphone, Mail, AlertCircle, Copy, Download, Printer,
-    Filter, Heart, Thermometer, Droplets,
-    FileText, Zap, ShieldCheck, User2, ArrowUpRight, TrendingUp,
-    Stethoscope, Microscope
+    X, MapPin, Activity, Check, Share2,
+    Plus, Droplets, Zap, ShieldCheck, User2, Filter
 } from 'lucide-react';
 import { cn } from '../utils/cn';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import {
-    ResponsiveContainer, AreaChart, Area, Tooltip, XAxis, YAxis
+    ResponsiveContainer, AreaChart, Area, Tooltip, XAxis
 } from 'recharts';
 import AddVisitModal from './AddVisitModal';
 import QRCode from 'qrcode';
@@ -53,10 +50,8 @@ const PatientProfileModal = ({ selectedPatient, onClose }: { selectedPatient: an
     const [fullProfile, setFullProfile] = useState<any>(selectedPatient || {}); // Fallback to provided prop immediately
     const [visits, setVisits] = useState<any[]>([]);
     const [vaccinations, setVaccinations] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
 
     // UI State
-    const [isSharing, setIsSharing] = useState(false);
     const [isAddingVisit, setIsAddingVisit] = useState(false);
     const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
@@ -98,8 +93,6 @@ const PatientProfileModal = ({ selectedPatient, onClose }: { selectedPatient: an
             } catch (error) {
                 console.error("Data load error", error);
                 // Don't toast error here to avoid spamming the user if something fails silently
-            } finally {
-                if (mounted) setLoading(false);
             }
         };
 
@@ -335,7 +328,7 @@ const PatientProfileModal = ({ selectedPatient, onClose }: { selectedPatient: an
                                             <Plus className="w-5 h-5" />
                                             <span className="text-xs font-black uppercase tracking-widest">New Clinical Visit</span>
                                         </button>
-                                        <button onClick={() => setIsSharing(true)} className="p-6 bg-white border border-slate-100 text-[#1a3a32] rounded-[24px] flex items-center justify-center gap-3 hover:bg-slate-50 transition-colors">
+                                        <button onClick={() => toast.success('Share feature coming soon!')} className="p-6 bg-white border border-slate-100 text-[#1a3a32] rounded-[24px] flex items-center justify-center gap-3 hover:bg-slate-50 transition-colors">
                                             <Share2 className="w-5 h-5" />
                                             <span className="text-xs font-black uppercase tracking-widest">Share Record</span>
                                         </button>
