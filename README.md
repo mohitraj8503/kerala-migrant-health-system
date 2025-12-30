@@ -129,6 +129,21 @@ A **production-ready digital health platform** that:
 
 ## 🚀 Quick Start
 
+### 🔑 Demo Credentials
+
+Test the platform with these pre-configured accounts:
+
+| Role | Login ID | Password | Access Level |
+|------|----------|----------|--------------|
+| **Super Admin (State Level)** | `admin@kerala.gov` | `admin` | ✅ Full access to all 14 districts and system settings |
+| **District Admin (Wayanad)** | `wayanad@kerala.gov` | `district` | 📍 Restricted to Wayanad district metrics only |
+| **Field Worker** | `worker` | `worker` | 📝 Access to Migrant Registration Form |
+| **PHC Staff** | `phc` | `phc` | 🏥 Clinical access to view patient records and update vitals |
+
+> **Note**: These are demo credentials for testing purposes only. Change passwords in production deployment.
+
+---
+
 ### Prerequisites
 - Node.js 18+
 - PostgreSQL 14+
