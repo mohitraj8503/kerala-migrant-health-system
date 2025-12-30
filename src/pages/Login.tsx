@@ -1,30 +1,71 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AlertCircle, Loader2, Chrome, Facebook, ArrowRight } from 'lucide-react';
 import { Logo } from '../components/Logo';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
+
 
 const Login = () => {
     const { login } = useAuth();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [socialLoading, setSocialLoading] = useState<'google' | 'facebook' | null>(null);
 
+    // Handle OAuth callback
+    useEffect(() => {
+        const token = searchParams.get('token');
+        const userStr = searchParams.get('user');
+
+        if (token && userStr) {
+            try {
+                const user = JSON.parse(decodeURIComponent(userStr));
+                localStorage.setItem('authToken', token);
+                // Redirect based on user role or default to register
+                navigate(user.role === 'Super Admin' ? '/dashboard' : '/register');
+            } catch (error) {
+                setError('Failed to process authentication');
+            }
+        }
+    }, [searchParams, navigate]);
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         performLogin({ username, password });
     };
 
-    const handleSocialLogin = (provider: 'google' | 'facebook') => {
+    const handleSocialLogin = async (provider: 'google' | 'facebook') => {
         setSocialLoading(provider);
-        setTimeout(() => {
-            performLogin({ provider });
-        }, 1500);
+
+        if (provider === 'google') {
+            try {
+                // Get Google OAuth URL from backend
+                const response = await fetch('/api/auth/google');
+                const data = await response.json();
+
+                if (data.success && data.authUrl) {
+                    // Redirect to Google OAuth
+                    window.location.href = data.authUrl;
+                } else {
+                    setError('Failed to initiate Google login');
+                    setSocialLoading(null);
+                }
+            } catch (error) {
+                setError('Failed to connect to authentication service');
+                setSocialLoading(null);
+            }
+        } else {
+            // Facebook login - keep mock for now
+            setTimeout(() => {
+                performLogin({ provider });
+            }, 1500);
+        }
     };
+
 
     const performLogin = async (credentials: any) => {
         setError('');
