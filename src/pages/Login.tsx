@@ -79,7 +79,9 @@ const Login = () => {
             else if (username.includes('admin') || username.includes('wayanad')) navigate('/dashboard');
             else navigate('/register');
         } else {
-            setError('Authentication failed. Please check credentials or connection.');
+            // Check console for detailed error logs
+            console.log('Login failed - check browser console for details');
+            setError('Authentication failed. Please check your credentials. If using demo: admin@kerala.gov / admin');
             setIsLoggingIn(false);
             setSocialLoading(null);
         }
