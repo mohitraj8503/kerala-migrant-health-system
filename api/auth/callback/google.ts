@@ -21,6 +21,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const REDIRECT_URI = `${baseUrl}/api/auth/callback/google`;
 
     try {
+        interface GoogleTokens {
+            access_token: string;
+            id_token?: string;
+            expires_in?: number;
+            token_type?: string;
+            refresh_token?: string;
+            scope?: string;
+        }
+
+        interface GoogleUserInfo {
+            id: string;
+            email: string;
+            verified_email: boolean;
+            name: string;
+            given_name: string;
+            family_name: string;
+            picture: string;
+            locale: string;
+        }
+
         // Exchange code for tokens
         const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
             method: 'POST',
@@ -34,7 +54,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             })
         });
 
-        const tokens = await tokenResponse.json();
+        const tokens = (await tokenResponse.json()) as GoogleTokens;
 
         if (!tokens.access_token) {
             return res.status(400).json({ success: false, message: 'Failed to get access token' });
@@ -45,7 +65,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             headers: { Authorization: `Bearer ${tokens.access_token}` }
         });
 
-        const userInfo = await userInfoResponse.json();
+        const userInfo = (await userInfoResponse.json()) as GoogleUserInfo;
 
         // Create session token
         const sessionToken = Buffer.from(`google:${userInfo.email}:${Date.now()}`).toString('base64');
